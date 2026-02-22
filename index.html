@@ -13,59 +13,53 @@
   --text: #f5f5fa;
   --muted: rgba(255,255,255,0.42);
   --meme-1: #ff2d55; --meme-2: #ff6b00;
-  --ai-1: #7c3aed;   --ai-2: #06b6d4;
+  --ai-1:   #7c3aed; --ai-2:   #06b6d4;
+  --tr-1:   #f59e0b; --tr-2:   #10b981;
 }
 
-html, body {
-  height: 100%; background: var(--bg);
-  color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif;
-  overflow: hidden;
-}
-
+html, body { height: 100%; background: var(--bg); color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif; overflow: hidden; }
 #app { display: flex; flex-direction: column; height: 100dvh; }
 
-/* ── TABS ── */
+/* ── TAB BAR ── */
 #tab-bar {
-  position: absolute; top: 14px; left: 50%; transform: translateX(-50%);
+  position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
   z-index: 200;
-  display: flex; gap: 4px;
-  background: rgba(10,10,18,0.75);
-  backdrop-filter: blur(18px);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 50px; padding: 5px;
-  box-shadow: 0 4px 28px rgba(0,0,0,0.6);
+  display: flex; gap: 3px;
+  background: rgba(8,8,13,0.82);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: 50px; padding: 4px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.7);
+  white-space: nowrap;
 }
 .tab-btn {
   font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 0.73rem; font-weight: 700;
+  font-size: 0.68rem; font-weight: 700;
   letter-spacing: 0.05em; text-transform: uppercase;
-  padding: 8px 24px; border-radius: 50px;
+  padding: 7px 18px; border-radius: 50px;
   border: none; background: transparent;
-  color: rgba(255,255,255,0.32);
-  cursor: pointer; transition: all 0.28s ease; white-space: nowrap;
+  color: rgba(255,255,255,0.3);
+  cursor: pointer; transition: all 0.28s ease;
 }
-#tab-meme.active {
-  background: linear-gradient(135deg, var(--meme-1), var(--meme-2));
-  color: #fff; box-shadow: 0 0 22px rgba(255,45,85,0.5);
-}
-#tab-ai.active {
-  background: linear-gradient(135deg, var(--ai-1), var(--ai-2));
-  color: #fff; box-shadow: 0 0 22px rgba(124,58,237,0.55);
-}
+#tab-meme.active  { background: linear-gradient(135deg,var(--meme-1),var(--meme-2)); color:#fff; box-shadow:0 0 20px rgba(255,45,85,0.45); }
+#tab-ai.active    { background: linear-gradient(135deg,var(--ai-1),var(--ai-2));     color:#fff; box-shadow:0 0 20px rgba(124,58,237,0.45); }
+#tab-trend.active { background: linear-gradient(135deg,var(--tr-1),var(--tr-2));     color:#fff; box-shadow:0 0 20px rgba(245,158,11,0.45); }
 
 /* ── SECTIONS ── */
 #sections { flex: 1; position: relative; overflow: hidden; }
-
 .pane {
   position: absolute; inset: 0;
   overflow-y: scroll; scroll-snap-type: y mandatory;
   -webkit-overflow-scrolling: touch;
-  transition: transform 0.42s cubic-bezier(0.4,0,0.2,1), opacity 0.35s ease;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  visibility: visible; opacity: 1;
 }
 .pane::-webkit-scrollbar { display: none; }
-.pane.hidden { pointer-events: none; opacity: 0; }
-#pane-meme.hidden { transform: translateX(-100%); }
-#pane-ai.hidden   { transform: translateX(100%); }
+.pane.hidden {
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+}
 
 /* ── INTRO SPLASH ── */
 .intro {
@@ -83,20 +77,19 @@ html, body {
 .intro-emoji { font-size: 5rem; margin-bottom: 16px; position: relative; z-index: 1; filter: drop-shadow(0 0 28px var(--shadow)); }
 .intro-title {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(3.8rem, 15vw, 6.5rem);
-  letter-spacing: 0.06em; line-height: 1;
+  font-size: clamp(3.8rem, 15vw, 6.5rem); letter-spacing: 0.06em; line-height: 1;
   background: linear-gradient(135deg, var(--c1), var(--c2));
   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
   position: relative; z-index: 1; margin-bottom: 14px;
 }
-.intro-desc { font-size: 0.88rem; color: var(--muted); max-width: 280px; line-height: 1.65; position: relative; z-index: 1; margin-bottom: 32px; }
-.src-label { font-size: 0.57rem; text-transform: uppercase; letter-spacing: 0.16em; color: rgba(255,255,255,0.28); margin-bottom: 14px; position: relative; z-index: 1; }
+.intro-desc { font-size: 0.88rem; color: var(--muted); max-width: 280px; line-height: 1.65; position: relative; z-index: 1; margin-bottom: 30px; }
+.src-label { font-size: 0.57rem; text-transform: uppercase; letter-spacing: 0.16em; color: rgba(255,255,255,0.28); margin-bottom: 12px; position: relative; z-index: 1; }
 .chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; position: relative; z-index: 1; max-width: 340px; }
-.chip { font-size: 0.69rem; font-weight: 600; padding: 5px 14px; border-radius: 50px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.13); color: rgba(255,255,255,0.68); }
+.chip { font-size: 0.68rem; font-weight: 600; padding: 5px 14px; border-radius: 50px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: rgba(255,255,255,0.65); }
 .swipe-hint { position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%); z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 5px; animation: float 2s ease-in-out infinite; }
 @keyframes float { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(9px)} }
-.swipe-hint span { font-size: 0.56rem; text-transform: uppercase; letter-spacing: 0.14em; color: rgba(255,255,255,0.22); }
-.swipe-hint .arr { font-size: 1.3rem; color: rgba(255,255,255,0.28); line-height: 1; }
+.swipe-hint span { font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.14em; color: rgba(255,255,255,0.22); }
+.swipe-hint .arr { font-size: 1.3rem; color: rgba(255,255,255,0.26); line-height: 1; }
 
 /* ── CONTENT CARD ── */
 .card {
@@ -108,45 +101,57 @@ html, body {
 }
 .card-bg { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
 .card-bg img { width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.7s ease; }
-.card-bg img.loaded { opacity: 0.65; }
+.card-bg img.loaded { opacity: 0.62; }
 .card-bg-pat { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 10rem; opacity: 0.04; user-select: none; }
 
 .vignette { position: absolute; inset: 0; z-index: 1; }
-.card.meme .vignette { background: linear-gradient(180deg, rgba(255,45,85,0.1) 0%, transparent 25%, transparent 40%, rgba(0,0,0,0.75) 68%, rgba(0,0,0,0.97) 100%); }
-.card.ai   .vignette { background: linear-gradient(180deg, rgba(124,58,237,0.1) 0%, transparent 25%, transparent 40%, rgba(0,0,0,0.75) 68%, rgba(0,0,0,0.97) 100%); }
+.card.meme  .vignette { background: linear-gradient(180deg, rgba(255,45,85,0.1) 0%, transparent 25%, transparent 40%, rgba(0,0,0,0.76) 68%, rgba(0,0,0,0.97) 100%); }
+.card.ai    .vignette { background: linear-gradient(180deg, rgba(124,58,237,0.1) 0%, transparent 25%, transparent 40%, rgba(0,0,0,0.76) 68%, rgba(0,0,0,0.97) 100%); }
+.card.trend .vignette { background: linear-gradient(180deg, rgba(245,158,11,0.1) 0%, transparent 25%, transparent 40%, rgba(0,0,0,0.76) 68%, rgba(0,0,0,0.97) 100%); }
 
 .card-blob { position: absolute; top: -80px; right: -80px; z-index: 1; width: 260px; height: 260px; border-radius: 50%; filter: blur(70px); opacity: 0.18; pointer-events: none; }
-.card.meme .card-blob { background: radial-gradient(circle, #ff2d55, #ff6b00); }
-.card.ai   .card-blob { background: radial-gradient(circle, #7c3aed, #06b6d4); }
+.card.meme  .card-blob { background: radial-gradient(circle, #ff2d55, #ff6b00); }
+.card.ai    .card-blob { background: radial-gradient(circle, #7c3aed, #06b6d4); }
+.card.trend .card-blob { background: radial-gradient(circle, #f59e0b, #10b981); }
+
+/* Trend category tag */
+.trend-cat-tag {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 0.55rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;
+  padding: 3px 9px; border-radius: 50px; margin-bottom: 7px;
+  background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.3); color: #fcd34d;
+}
 
 .card-body { position: relative; z-index: 3; padding: 0 22px 40px; width: 100%; animation: riseIn 0.42s cubic-bezier(0.18,0,0,1) both; }
 @keyframes riseIn { from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:translateY(0)} }
 
-.badge { display: inline-flex; align-items: center; gap: 6px; font-size: 0.61rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; padding: 4px 12px; border-radius: 50px; margin-bottom: 12px; }
-.card.meme .badge { background: rgba(255,45,85,0.15); border: 1px solid rgba(255,45,85,0.38); color: #ff7090; }
-.card.ai   .badge { background: rgba(124,58,237,0.15); border: 1px solid rgba(124,58,237,0.38); color: #a78bfa; }
+.badge { display: inline-flex; align-items: center; gap: 6px; font-size: 0.61rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; padding: 4px 12px; border-radius: 50px; margin-bottom: 11px; }
+.card.meme  .badge { background: rgba(255,45,85,0.15);  border: 1px solid rgba(255,45,85,0.38);  color: #ff7090; }
+.card.ai    .badge { background: rgba(124,58,237,0.15); border: 1px solid rgba(124,58,237,0.38); color: #a78bfa; }
+.card.trend .badge { background: rgba(245,158,11,0.15); border: 1px solid rgba(245,158,11,0.38); color: #fcd34d; }
 .badge-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
 
-.card-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(1.6rem, 6.5vw, 2.6rem); letter-spacing: 0.025em; line-height: 1.1; margin-bottom: 10px; text-shadow: 0 2px 30px rgba(0,0,0,0.95); }
+.card-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(1.6rem,6.5vw,2.6rem); letter-spacing: 0.025em; line-height: 1.1; margin-bottom: 10px; text-shadow: 0 2px 30px rgba(0,0,0,0.95); }
 .card-desc { font-size: 0.83rem; font-weight: 300; color: rgba(255,255,255,0.6); line-height: 1.62; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 14px; }
 .card-meta { font-size: 0.67rem; font-style: italic; color: rgba(255,255,255,0.32); margin-bottom: 12px; }
 .card-link { display: inline-flex; align-items: center; gap: 6px; font-size: 0.71rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; text-decoration: none; transition: opacity 0.2s; padding: 8px 18px; border-radius: 50px; }
-.card.meme .card-link { background: rgba(255,45,85,0.15); border: 1px solid rgba(255,45,85,0.3); color: #ff7090; }
-.card.ai   .card-link { background: rgba(124,58,237,0.15); border: 1px solid rgba(124,58,237,0.3); color: #a78bfa; }
+.card.meme  .card-link { background: rgba(255,45,85,0.15);  border: 1px solid rgba(255,45,85,0.3);  color: #ff7090; }
+.card.ai    .card-link { background: rgba(124,58,237,0.15); border: 1px solid rgba(124,58,237,0.3); color: #a78bfa; }
+.card.trend .card-link { background: rgba(245,158,11,0.15); border: 1px solid rgba(245,158,11,0.3); color: #fcd34d; }
 .card-link:hover { opacity: 0.72; }
 
 /* ── LOADER / ERROR ── */
 .loader { height: 100dvh; min-height: 100dvh; scroll-snap-align: start; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; }
 .spin { width: 42px; height: 42px; border: 2.5px solid rgba(255,255,255,0.08); border-top-color: rgba(255,255,255,0.6); border-radius: 50%; animation: spin 0.7s linear infinite; }
-@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes spin { to{transform:rotate(360deg)} }
 .spin-txt { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); }
-.err-icon { font-size: 2.4rem; }
-.retry-txt { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.retry-txt { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
 
-/* ── PROGRESS ── */
+/* ── PROGRESS BAR ── */
 #bar { position: fixed; top: 0; left: 0; height: 2px; width: 0; z-index: 999; transition: width 0.32s ease; }
-#bar.meme-bar { background: linear-gradient(90deg, #ff2d55, #ff6b00); }
-#bar.ai-bar   { background: linear-gradient(90deg, #7c3aed, #06b6d4); }
+#bar.meme-bar  { background: linear-gradient(90deg,#ff2d55,#ff6b00); }
+#bar.ai-bar    { background: linear-gradient(90deg,#7c3aed,#06b6d4); }
+#bar.trend-bar { background: linear-gradient(90deg,#f59e0b,#10b981); }
 </style>
 </head>
 <body>
@@ -154,8 +159,9 @@ html, body {
 <div id="bar" class="meme-bar"></div>
 
 <div id="tab-bar">
-  <button class="tab-btn active" id="tab-meme" onclick="switchTab('meme')">😂 Memes</button>
-  <button class="tab-btn"        id="tab-ai"   onclick="switchTab('ai')">🤖 AI News</button>
+  <button class="tab-btn active" id="tab-meme"  onclick="switchTab('meme')">😂 Memes</button>
+  <button class="tab-btn"        id="tab-ai"    onclick="switchTab('ai')">🤖 AI News</button>
+  <button class="tab-btn"        id="tab-trend" onclick="switchTab('trend')">🔥 Trends</button>
 </div>
 
 <div id="app">
@@ -169,12 +175,9 @@ html, body {
         <div class="intro-desc">Fresh memes pulled live from Reddit — rotates through the best communities every load.</div>
         <div class="src-label">Sources</div>
         <div class="chips">
-          <span class="chip">r/memes</span>
-          <span class="chip">r/dankmemes</span>
-          <span class="chip">r/me_irl</span>
-          <span class="chip">r/funny</span>
-          <span class="chip">r/AdviceAnimals</span>
-          <span class="chip">r/wholesomememes</span>
+          <span class="chip">r/memes</span><span class="chip">r/dankmemes</span>
+          <span class="chip">r/me_irl</span><span class="chip">r/funny</span>
+          <span class="chip">r/AdviceAnimals</span><span class="chip">r/wholesomememes</span>
         </div>
         <div class="swipe-hint"><span>Swipe up</span><div class="arr">↓</div></div>
       </div>
@@ -188,13 +191,27 @@ html, body {
         <div class="intro-desc">The latest in artificial intelligence — models, breakthroughs, policy and industry moves.</div>
         <div class="src-label">Sources</div>
         <div class="chips">
-          <span class="chip">VentureBeat AI</span>
-          <span class="chip">TechCrunch AI</span>
-          <span class="chip">The Verge AI</span>
-          <span class="chip">Wired AI</span>
-          <span class="chip">Ars Technica</span>
-          <span class="chip">HackerNews AI</span>
+          <span class="chip">VentureBeat AI</span><span class="chip">TechCrunch AI</span>
+          <span class="chip">The Verge AI</span><span class="chip">Wired AI</span>
+          <span class="chip">Ars Technica</span><span class="chip">HackerNews AI</span>
           <span class="chip">MIT Tech Review</span>
+        </div>
+        <div class="swipe-hint"><span>Swipe up</span><div class="arr">↓</div></div>
+      </div>
+    </div>
+
+    <!-- TRENDS PANE -->
+    <div class="pane hidden" id="pane-trend">
+      <div class="intro" style="--glow:rgba(245,158,11,0.22);--shadow:rgba(245,158,11,0.55);--c1:#f59e0b;--c2:#10b981">
+        <div class="intro-emoji">🔥</div>
+        <div class="intro-title">Trends</div>
+        <div class="intro-desc">What the world is obsessing over — fashion, gadgets, cars, lifestyle & more. All trending now.</div>
+        <div class="src-label">Categories</div>
+        <div class="chips">
+          <span class="chip">👗 Fashion</span><span class="chip">💻 Gadgets</span>
+          <span class="chip">🚗 Cars</span><span class="chip">🏠 Lifestyle</span>
+          <span class="chip">📱 Tech Products</span><span class="chip">✈️ Travel</span>
+          <span class="chip">🎮 Gaming</span><span class="chip">💄 Beauty</span>
         </div>
         <div class="swipe-hint"><span>Swipe up</span><div class="arr">↓</div></div>
       </div>
@@ -205,12 +222,12 @@ html, body {
 
 <script>
 // ─────────────────────────────────────────────────────────────
-//  CONFIG
+//  DATA SOURCES
 // ─────────────────────────────────────────────────────────────
+
 const MEME_SUBS = ['memes','dankmemes','me_irl','funny','AdviceAnimals','wholesomememes'];
 
-// AI RSS feeds — tried in sequence, cycling through on each batch
-const AI_RSS_FEEDS = [
+const AI_FEEDS = [
   { name:'VentureBeat AI',  url:'https://venturebeat.com/category/ai/feed/' },
   { name:'TechCrunch AI',   url:'https://techcrunch.com/category/artificial-intelligence/feed/' },
   { name:'The Verge AI',    url:'https://www.theverge.com/ai-artificial-intelligence/rss/index.xml' },
@@ -220,29 +237,53 @@ const AI_RSS_FEEDS = [
   { name:'AI News',         url:'https://www.artificialintelligence-news.com/feed/rss/' },
 ];
 
-// CORS proxies tried in order — if one fails the next is used
-const CORS_PROXIES = [
-  url => `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}&count=6`,  // returns parsed JSON
-  url => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,                    // returns raw XML in .contents
-  url => `https://corsproxy.io/?${encodeURIComponent(url)}`,                                  // returns raw XML
+// Trends: diverse categories with emoji labels for card display
+const TREND_FEEDS = [
+  { name:'Engadget',         emoji:'💻', cat:'Gadgets',      url:'https://www.engadget.com/rss.xml' },
+  { name:'The Verge',        emoji:'📱', cat:'Tech Products', url:'https://www.theverge.com/rss/index.xml' },
+  { name:'Fashionista',      emoji:'👗', cat:'Fashion',       url:'https://fashionista.com/.rss/excerpt/' },
+  { name:'Hypebeast',        emoji:'👟', cat:'Fashion',       url:'https://hypebeast.com/feed' },
+  { name:'Apartment Therapy',emoji:'🏠', cat:'Lifestyle',     url:'https://www.apartmenttherapy.com/main.rss' },
+  { name:'TechRadar',        emoji:'🔬', cat:'Tech Products', url:'https://www.techradar.com/rss' },
+  { name:'Car and Driver',   emoji:'🚗', cat:'Cars',          url:'https://www.caranddriver.com/rss/all.xml/' },
+  { name:'Road & Track',     emoji:'🏎️',  cat:'Cars',          url:'https://www.roadandtrack.com/rss/all.xml/' },
+  { name:'Slashgear',        emoji:'⚡', cat:'Tech Products', url:'https://www.slashgear.com/feed/' },
+  { name:'Lonely Planet',    emoji:'✈️', cat:'Travel',        url:'https://www.lonelyplanet.com/news/feed' },
+  { name:'Kotaku',           emoji:'🎮', cat:'Gaming',        url:'https://kotaku.com/rss' },
+  { name:'IGN',              emoji:'🎮', cat:'Gaming',        url:'https://feeds.ign.com/ign/all' },
+  { name:'Allure',           emoji:'💄', cat:'Beauty',        url:'https://www.allure.com/feed/rss' },
+  { name:'CNET',             emoji:'📡', cat:'Gadgets',       url:'https://www.cnet.com/rss/all/' },
+  { name:'GQ',               emoji:'👔', cat:'Fashion',       url:'https://www.gq.com/feed/rss' },
+];
+
+// CORS proxy chain — tries each in order
+const PROXIES = [
+  u => `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(u)}&count=6`,
+  u => `https://api.allorigins.win/get?url=${encodeURIComponent(u)}`,
+  u => `https://corsproxy.io/?${encodeURIComponent(u)}`,
 ];
 
 // ─────────────────────────────────────────────────────────────
 //  STATE
 // ─────────────────────────────────────────────────────────────
-const panes = { meme: document.getElementById('pane-meme'), ai: document.getElementById('pane-ai') };
-const bar   = document.getElementById('bar');
+const panes = {
+  meme:  document.getElementById('pane-meme'),
+  ai:    document.getElementById('pane-ai'),
+  trend: document.getElementById('pane-trend'),
+};
+const bar = document.getElementById('bar');
 let current = 'meme';
 const st = {
-  meme: { loading: false, subIdx: 0 },
-  ai:   { loading: false, feedIdx: 0 }
+  meme:  { loading: false, subIdx: 0 },
+  ai:    { loading: false, feedIdx: 0 },
+  trend: { loading: false, feedIdx: 0 },
 };
 
 // ─────────────────────────────────────────────────────────────
-//  PROGRESS BAR
+//  UTILS
 // ─────────────────────────────────────────────────────────────
 function prog(pct, cat) {
-  bar.className = cat === 'meme' ? 'meme-bar' : 'ai-bar';
+  bar.className = `${cat}-bar`;
   bar.style.width = pct + '%';
   if (pct >= 100) setTimeout(() => {
     bar.style.transition = 'none'; bar.style.width = '0';
@@ -250,210 +291,216 @@ function prog(pct, cat) {
   }, 600);
 }
 
-// ─────────────────────────────────────────────────────────────
-//  TAB SWITCH
-// ─────────────────────────────────────────────────────────────
-function switchTab(cat) {
-  if (cat === current) return;
-  document.getElementById('tab-' + current).classList.remove('active');
-  document.getElementById('tab-' + cat).classList.add('active');
-  panes[current].classList.add('hidden');
-  panes[cat].classList.remove('hidden');
-  current = cat;
-  if (!st[cat].loading && panes[cat].querySelectorAll('.card').length === 0) loadCards(cat);
-}
-
-// ─────────────────────────────────────────────────────────────
-//  XML PARSER — converts raw RSS/Atom XML → item array
-// ─────────────────────────────────────────────────────────────
 function parseXML(xmlStr) {
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(xmlStr, 'text/xml');
-  const items = [...doc.querySelectorAll('item, entry')];
-  return items.map(el => {
-    const getText = tag => el.querySelector(tag)?.textContent?.trim() || '';
-    const getAttr = (tag, attr) => el.querySelector(tag)?.getAttribute(attr) || '';
-    const title   = getText('title');
-    const link    = getText('link') || getAttr('link', 'href');
-    const desc    = getText('description') || getText('summary') || getText('content');
-    const date    = getText('pubDate') || getText('published') || getText('updated');
-    const img     = getAttr('enclosure', 'url') ||
-                    (() => { const m = desc.match(/https?:\/\/[^\s"'<>]+\.(jpg|jpeg|png|webp|gif)/i); return m ? m[0] : ''; })();
-    return { title, link, desc: desc.replace(/<[^>]+>/g,'').trim().slice(0,160), date, img };
-  }).filter(i => i.title);
+  try {
+    const doc = new DOMParser().parseFromString(xmlStr, 'text/xml');
+    return [...doc.querySelectorAll('item, entry')].map(el => {
+      const t  = s => el.querySelector(s)?.textContent?.trim() || '';
+      const a  = (s,k) => el.querySelector(s)?.getAttribute(k) || '';
+      const raw= t('description') || t('summary') || t('content');
+      const img= a('enclosure','url') || a('media\\:content','url') || a('media\\:thumbnail','url') ||
+                 (() => { const m = raw.match(/https?:\/\/[^\s"'<>]+\.(jpg|jpeg|png|webp|gif)/i); return m?m[0]:''; })();
+      return {
+        title: t('title'),
+        link:  t('link') || a('link','href'),
+        desc:  raw.replace(/<[^>]+>/g,'').trim().slice(0,180),
+        date:  t('pubDate') || t('published') || t('updated'),
+        img,
+      };
+    }).filter(i => i.title);
+  } catch { return []; }
 }
 
-// ─────────────────────────────────────────────────────────────
-//  FETCH WITH CORS PROXY CHAIN
-//  Tries rss2json first (returns JSON), then allorigins/corsproxy (raw XML)
-// ─────────────────────────────────────────────────────────────
-async function fetchWithProxies(feedUrl, feedName) {
-  // ── Proxy 0: rss2json (JSON response) ──
+async function fetchViaProxies(feedUrl) {
+  // Proxy 0: rss2json — returns parsed JSON
   try {
-    const url = CORS_PROXIES[0](feedUrl);
-    const res = await fetch(url, { signal: AbortSignal.timeout(8000) });
-    const d   = await res.json();
-    if (d.status === 'ok' && d.items?.length > 0) {
+    const r = await fetch(PROXIES[0](feedUrl), { signal: AbortSignal.timeout(7000) });
+    const d = await r.json();
+    if (d.status === 'ok' && d.items?.length) {
       return d.items.map(i => ({
-        title:    i.title || '',
-        link:     i.link  || '',
-        desc:     (i.description || '').replace(/<[^>]+>/g,'').trim().slice(0,160),
-        date:     i.pubDate || '',
-        img:      i.thumbnail || (i.enclosure?.link) || '',
-        srcLabel: feedName
+        title: i.title||'',
+        link:  i.link||'',
+        desc:  (i.description||'').replace(/<[^>]+>/g,'').trim().slice(0,180),
+        date:  i.pubDate||'',
+        img:   i.thumbnail || i.enclosure?.link || '',
       }));
     }
-  } catch(_) {}
+  } catch {}
 
-  // ── Proxy 1: allorigins (returns {contents: '<xml>'}) ──
+  // Proxy 1: allorigins — returns { contents: rawXML }
   try {
-    const url = CORS_PROXIES[1](feedUrl);
-    const res = await fetch(url, { signal: AbortSignal.timeout(8000) });
-    const d   = await res.json();
-    if (d.contents) {
-      return parseXML(d.contents).map(i => ({ ...i, srcLabel: feedName }));
-    }
-  } catch(_) {}
+    const r = await fetch(PROXIES[1](feedUrl), { signal: AbortSignal.timeout(7000) });
+    const d = await r.json();
+    if (d.contents) { const items = parseXML(d.contents); if (items.length) return items; }
+  } catch {}
 
-  // ── Proxy 2: corsproxy.io (returns raw XML) ──
+  // Proxy 2: corsproxy.io — returns raw XML
   try {
-    const url = CORS_PROXIES[2](feedUrl);
-    const res = await fetch(url, { signal: AbortSignal.timeout(8000) });
-    const xml = await res.text();
-    if (xml && xml.includes('<')) {
-      return parseXML(xml).map(i => ({ ...i, srcLabel: feedName }));
-    }
-  } catch(_) {}
+    const r = await fetch(PROXIES[2](feedUrl), { signal: AbortSignal.timeout(7000) });
+    const xml = await r.text();
+    if (xml?.includes('<')) { const items = parseXML(xml); if (items.length) return items; }
+  } catch {}
 
-  return null; // all proxies failed for this feed
+  return null;
 }
 
-// ─────────────────────────────────────────────────────────────
-//  HACKERNEWS — fallback, searches for AI-related stories
-// ─────────────────────────────────────────────────────────────
-const AI_KEYWORDS = ['ai','artificial intelligence','llm','gpt','claude','gemini','openai','anthropic','machine learning','neural','deep learning','chatbot','model'];
-
-async function fetchHNAI(count = 6) {
-  const res  = await fetch('https://hacker-news.firebaseio.com/v0/topstories.json', { signal: AbortSignal.timeout(6000) });
-  const ids  = await res.json();
-  // Fetch top 40 stories to find enough AI ones
-  const top  = ids.slice(0, 40);
-  const stories = await Promise.all(
-    top.map(id =>
-      fetch(`https://hacker-news.firebaseio.com/v0/item/${id}.json`, { signal: AbortSignal.timeout(5000) })
-        .then(r => r.json()).catch(() => null)
-    )
-  );
+// HackerNews AI fallback
+const AI_KW = ['ai','llm','gpt','claude','gemini','openai','anthropic','machine learning','neural','deep learning','chatbot'];
+async function fetchHNAI() {
+  const ids = await fetch('https://hacker-news.firebaseio.com/v0/topstories.json',{signal:AbortSignal.timeout(6000)}).then(r=>r.json());
+  const stories = await Promise.all(ids.slice(0,50).map(id=>
+    fetch(`https://hacker-news.firebaseio.com/v0/item/${id}.json`,{signal:AbortSignal.timeout(5000)}).then(r=>r.json()).catch(()=>null)
+  ));
   return stories
-    .filter(s => s && s.title && AI_KEYWORDS.some(kw => s.title.toLowerCase().includes(kw)))
-    .slice(0, count)
-    .map(s => ({
-      title:    s.title,
-      link:     s.url || `https://news.ycombinator.com/item?id=${s.id}`,
-      desc:     `${s.score} points · ${s.descendants || 0} comments on Hacker News`,
-      date:     new Date(s.time * 1000).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),
-      img:      '',
-      srcLabel: 'HackerNews AI'
-    }));
+    .filter(s=>s?.title && AI_KW.some(k=>s.title.toLowerCase().includes(k)))
+    .slice(0,6)
+    .map(s=>({ title:s.title, link:s.url||`https://news.ycombinator.com/item?id=${s.id}`,
+      desc:`${s.score} points · ${s.descendants||0} comments on Hacker News`,
+      date: new Date(s.time*1000).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}), img:'' }));
 }
 
 // ─────────────────────────────────────────────────────────────
-//  FETCH: MEMES
+//  FETCHERS
 // ─────────────────────────────────────────────────────────────
 async function fetchMemes() {
-  const s   = st.meme;
-  const sub = MEME_SUBS[s.subIdx % MEME_SUBS.length];
-  s.subIdx++;
-  const res = await fetch(`https://meme-api.com/gimme/${sub}/6`, { signal: AbortSignal.timeout(8000) });
-  if (!res.ok) throw new Error('Meme API error');
-  const d = await res.json();
-  return (d.memes || []).map(m => ({
-    cat: 'meme', title: m.title || 'Untitled',
-    desc: `👍 ${(m.ups||0).toLocaleString()} upvotes`,
-    img: m.url || '', srcLabel: `r/${m.subreddit}`,
-    meta: `Reddit · u/${m.author}`, link: m.postLink || ''
+  const s = st.meme;
+  const sub = MEME_SUBS[s.subIdx++ % MEME_SUBS.length];
+  const r = await fetch(`https://meme-api.com/gimme/${sub}/6`,{signal:AbortSignal.timeout(8000)});
+  if(!r.ok) throw new Error('Meme API error');
+  const d = await r.json();
+  return (d.memes||[]).map(m=>({
+    cat:'meme', title:m.title||'Untitled',
+    desc:`👍 ${(m.ups||0).toLocaleString()} upvotes`,
+    img:m.url||'', srcLabel:`r/${m.subreddit}`,
+    meta:`Reddit · u/${m.author}`, link:m.postLink||'',
+    trendEmoji:'', trendCat:''
   }));
 }
 
-// ─────────────────────────────────────────────────────────────
-//  FETCH: AI NEWS — tries RSS feeds, falls back to HN
-// ─────────────────────────────────────────────────────────────
 async function fetchAINews() {
   const s = st.ai;
-
-  // Try up to 3 RSS feeds before giving up and using HN
-  for (let attempt = 0; attempt < AI_RSS_FEEDS.length; attempt++) {
-    const feed  = AI_RSS_FEEDS[s.feedIdx % AI_RSS_FEEDS.length];
-    s.feedIdx++;
-    const items = await fetchWithProxies(feed.url, feed.name);
-    if (items && items.length > 0) {
-      return items.map(i => ({
-        cat: 'ai', title: i.title, desc: i.desc, img: i.img,
-        srcLabel: i.srcLabel,
-        meta: `${i.srcLabel}${i.date ? ' · ' + new Date(i.date).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : ''}`,
-        link: i.link
+  for (let i = 0; i < AI_FEEDS.length; i++) {
+    const feed = AI_FEEDS[s.feedIdx++ % AI_FEEDS.length];
+    const items = await fetchViaProxies(feed.url);
+    if (items?.length) {
+      return items.map(i=>({
+        cat:'ai', title:i.title, desc:i.desc, img:i.img, srcLabel:feed.name,
+        meta:`${feed.name}${i.date?' · '+new Date(i.date).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):''}`,
+        link:i.link, trendEmoji:'', trendCat:''
       }));
     }
   }
+  // HN fallback
+  const hn = await fetchHNAI();
+  return hn.map(i=>({ cat:'ai', title:i.title, desc:i.desc, img:'', srcLabel:'HackerNews AI',
+    meta:`HackerNews · ${i.date}`, link:i.link, trendEmoji:'', trendCat:'' }));
+}
 
-  // All RSS feeds failed → use HackerNews AI stories (always works, no CORS)
-  console.warn('RSS feeds unavailable — falling back to HackerNews AI');
-  const hn = await fetchHNAI(6);
-  if (hn.length > 0) {
-    return hn.map(i => ({
-      cat: 'ai', title: i.title, desc: i.desc, img: '',
-      srcLabel: 'HackerNews AI', meta: `HackerNews · ${i.date}`, link: i.link
-    }));
+async function fetchTrends() {
+  const s = st.trend;
+  // Try feeds in rotation — collect from 2 feeds per batch to mix categories
+  const results = [];
+  let attempts = 0;
+  while (results.length < 5 && attempts < TREND_FEEDS.length) {
+    const feed = TREND_FEEDS[s.feedIdx++ % TREND_FEEDS.length];
+    attempts++;
+    const items = await fetchViaProxies(feed.url);
+    if (items?.length) {
+      const mapped = items.slice(0,3).map(i=>({
+        cat:'trend', title:i.title, desc:i.desc, img:i.img, srcLabel:feed.name,
+        meta:`${feed.name}${i.date?' · '+new Date(i.date).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):''}`,
+        link:i.link, trendEmoji:feed.emoji, trendCat:feed.cat
+      }));
+      results.push(...mapped);
+    }
+    // Try a second feed from different category
+    if (results.length >= 2) {
+      const feed2 = TREND_FEEDS[s.feedIdx++ % TREND_FEEDS.length];
+      attempts++;
+      const items2 = await fetchViaProxies(feed2.url);
+      if (items2?.length) {
+        const mapped2 = items2.slice(0,3).map(i=>({
+          cat:'trend', title:i.title, desc:i.desc, img:i.img, srcLabel:feed2.name,
+          meta:`${feed2.name}${i.date?' · '+new Date(i.date).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):''}`,
+          link:i.link, trendEmoji:feed2.emoji, trendCat:feed2.cat
+        }));
+        results.push(...mapped2);
+      }
+      break;
+    }
   }
-
-  throw new Error('All AI sources failed');
+  if (!results.length) throw new Error('All trend feeds failed');
+  return results;
 }
 
 // ─────────────────────────────────────────────────────────────
-//  BUILD CARD DOM
+//  TAB SWITCH — simple, bulletproof, no inline-style conflicts
+// ─────────────────────────────────────────────────────────────
+function switchTab(cat) {
+  if (cat === current) return;
+
+  // Hide old, show new
+  document.getElementById('tab-' + current).classList.remove('active');
+  panes[current].classList.add('hidden');
+
+  document.getElementById('tab-' + cat).classList.add('active');
+  panes[cat].classList.remove('hidden');
+
+  current = cat;
+
+  // Load content if not loaded yet
+  if (!st[cat].loading && panes[cat].querySelectorAll('.card').length === 0) {
+    loadCards(cat);
+  }
+}
+
+// ─────────────────────────────────────────────────────────────
+//  CARD BUILDER
 // ─────────────────────────────────────────────────────────────
 function buildCard(item) {
   const card = document.createElement('div');
   card.className = `card ${item.cat}`;
 
-  // BG
-  const bg  = document.createElement('div'); bg.className = 'card-bg';
+  const bg = document.createElement('div'); bg.className = 'card-bg';
   const pat = document.createElement('div'); pat.className = 'card-bg-pat';
-  pat.textContent = item.cat === 'meme' ? '😂' : '🤖';
+  pat.textContent = item.cat==='meme'?'😂': item.cat==='ai'?'🤖':'🔥';
   bg.appendChild(pat);
   if (item.img) {
     const img = document.createElement('img');
-    img.loading = 'lazy'; img.decoding = 'async'; img.src = item.img; img.alt = '';
-    img.onload  = () => img.classList.add('loaded');
-    img.onerror = () => img.remove();
+    img.loading='lazy'; img.decoding='async'; img.src=item.img; img.alt='';
+    img.onload=()=>img.classList.add('loaded'); img.onerror=()=>img.remove();
     bg.appendChild(img);
   }
   card.appendChild(bg);
 
-  const vig  = document.createElement('div'); vig.className  = 'vignette';  card.appendChild(vig);
-  const blob = document.createElement('div'); blob.className = 'card-blob'; card.appendChild(blob);
+  const vig=document.createElement('div'); vig.className='vignette'; card.appendChild(vig);
+  const blob=document.createElement('div'); blob.className='card-blob'; card.appendChild(blob);
 
-  // Body
-  const body  = document.createElement('div'); body.className = 'card-body';
-  const badge = document.createElement('div'); badge.className = 'badge';
-  badge.innerHTML = `<span class="badge-dot"></span>${item.srcLabel}`;
-  body.appendChild(badge);
+  const body=document.createElement('div'); body.className='card-body';
 
-  const title = document.createElement('h2'); title.className = 'card-title'; title.textContent = item.title;
-  body.appendChild(title);
-
-  if (item.desc) {
-    const desc = document.createElement('p'); desc.className = 'card-desc'; desc.textContent = item.desc;
-    body.appendChild(desc);
+  // Trend category mini-tag
+  if (item.cat === 'trend' && item.trendCat) {
+    const tag=document.createElement('div'); tag.className='trend-cat-tag';
+    tag.textContent=`${item.trendEmoji} ${item.trendCat}`;
+    body.appendChild(tag);
   }
 
-  const meta = document.createElement('div'); meta.className = 'card-meta'; meta.textContent = item.meta;
+  const badge=document.createElement('div'); badge.className='badge';
+  badge.innerHTML=`<span class="badge-dot"></span>${item.srcLabel}`;
+  body.appendChild(badge);
+
+  const title=document.createElement('h2'); title.className='card-title'; title.textContent=item.title;
+  body.appendChild(title);
+
+  if (item.desc) { const d=document.createElement('p'); d.className='card-desc'; d.textContent=item.desc; body.appendChild(d); }
+
+  const meta=document.createElement('div'); meta.className='card-meta'; meta.textContent=item.meta;
   body.appendChild(meta);
 
   if (item.link) {
-    const a = document.createElement('a');
-    a.className = 'card-link'; a.href = item.link; a.target = '_blank'; a.rel = 'noopener noreferrer';
-    a.textContent = item.cat === 'meme' ? 'View post ↗' : 'Read story ↗';
+    const a=document.createElement('a'); a.className='card-link';
+    a.href=item.link; a.target='_blank'; a.rel='noopener noreferrer';
+    a.textContent = item.cat==='meme'?'View post ↗': item.cat==='ai'?'Read story ↗':'See trend ↗';
     body.appendChild(a);
   }
 
@@ -469,26 +516,27 @@ async function loadCards(cat) {
   if (s.loading) return;
   s.loading = true;
 
-  const pane   = panes[cat];
+  const pane = panes[cat];
   const loader = document.createElement('div');
-  loader.className = 'loader'; loader.dataset.loader = cat;
-  loader.innerHTML = '<div class="spin"></div><div class="spin-txt">Loading…</div>';
+  loader.className='loader'; loader.dataset.loader=cat;
+  loader.innerHTML='<div class="spin"></div><div class="spin-txt">Loading…</div>';
   pane.appendChild(loader);
   prog(20, cat);
 
   try {
-    const items = cat === 'meme' ? await fetchMemes() : await fetchAINews();
+    const items = cat==='meme' ? await fetchMemes()
+                : cat==='ai'   ? await fetchAINews()
+                :                await fetchTrends();
     prog(85, cat);
     pane.querySelector(`[data-loader="${cat}"]`)?.remove();
-    if (!items || items.length === 0) throw new Error('No content');
+    if (!items?.length) throw new Error('No content returned');
     items.forEach(item => pane.appendChild(buildCard(item)));
     prog(100, cat);
   } catch(err) {
     pane.querySelector(`[data-loader="${cat}"]`)?.remove();
-    const errEl = document.createElement('div');
-    errEl.className = 'loader';
-    errEl.innerHTML = '<div class="err-icon">⚠️</div><div class="retry-txt">Tap to retry</div>';
-    errEl.querySelector('.retry-txt').onclick = () => { errEl.remove(); s.loading = false; loadCards(cat); };
+    const errEl=document.createElement('div'); errEl.className='loader';
+    errEl.innerHTML='<div style="font-size:2.4rem">⚠️</div><div class="retry-txt">Tap to retry</div>';
+    errEl.querySelector('.retry-txt').onclick=()=>{ errEl.remove(); s.loading=false; loadCards(cat); };
     pane.appendChild(errEl);
     prog(100, cat);
   }
@@ -500,11 +548,11 @@ async function loadCards(cat) {
 // ─────────────────────────────────────────────────────────────
 function initScroll(cat) {
   const pane = panes[cat];
-  const obs  = new IntersectionObserver(entries => {
+  const obs = new IntersectionObserver(entries => {
     entries.forEach(e => {
       if (!e.isIntersecting || st[cat].loading) return;
       const cards = pane.querySelectorAll('.card');
-      if (cards.length && e.target === cards[cards.length - 1]) loadCards(cat);
+      if (cards.length && e.target === cards[cards.length-1]) loadCards(cat);
     });
   }, { root: pane, threshold: 0.35 });
 
@@ -519,6 +567,7 @@ function initScroll(cat) {
 // ─────────────────────────────────────────────────────────────
 initScroll('meme');
 initScroll('ai');
+initScroll('trend');
 loadCards('meme');
 </script>
 </body>
