@@ -100,12 +100,39 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
   background: #0d0d16;
 }
 .card-bg { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
-.card-bg img { width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.7s ease; }
-.card-bg img.loaded { opacity: 0.62; }
+
+/* Blurred backdrop for memes (fills bg behind transparent areas) */
+.card-bg .img-blur {
+  position: absolute; inset: -20px;
+  width: calc(100% + 40px); height: calc(100% + 40px);
+  object-fit: cover; filter: blur(22px) brightness(0.35);
+  opacity: 0; transition: opacity 0.6s ease; transform: scale(1.1);
+}
+.card-bg .img-blur.loaded { opacity: 1; }
+
+/* Main meme image — contained so full image always visible */
+.card.meme .card-bg .img-main {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: contain;
+  opacity: 0; transition: opacity 0.6s ease;
+}
+.card.meme .card-bg .img-main.loaded { opacity: 1; }
+
+/* AI / Trend images stay as cover */
+.card.ai .card-bg img,
+.card.trend .card-bg img {
+  width: 100%; height: 100%; object-fit: cover;
+  opacity: 0; transition: opacity 0.7s ease;
+}
+.card.ai .card-bg img.loaded,
+.card.trend .card-bg img.loaded { opacity: 0.62; }
+
 .card-bg-pat { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 10rem; opacity: 0.04; user-select: none; }
 
 .vignette { position: absolute; inset: 0; z-index: 1; }
-.card.meme  .vignette { background: linear-gradient(180deg, rgba(255,45,85,0.1) 0%, transparent 25%, transparent 40%, rgba(0,0,0,0.76) 68%, rgba(0,0,0,0.97) 100%); }
+/* Meme: only a tiny bottom strip so badge/button are readable, image stays clear */
+.card.meme  .vignette { background: linear-gradient(180deg, transparent 0%, transparent 75%, rgba(0,0,0,0.85) 100%); }
 .card.ai    .vignette { background: linear-gradient(180deg, rgba(124,58,237,0.1) 0%, transparent 25%, transparent 40%, rgba(0,0,0,0.76) 68%, rgba(0,0,0,0.97) 100%); }
 .card.trend .vignette { background: linear-gradient(180deg, rgba(245,158,11,0.1) 0%, transparent 25%, transparent 40%, rgba(0,0,0,0.76) 68%, rgba(0,0,0,0.97) 100%); }
 
@@ -123,10 +150,12 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 }
 
 .card-body { position: relative; z-index: 3; padding: 0 22px 40px; width: 100%; animation: riseIn 0.42s cubic-bezier(0.18,0,0,1) both; }
+/* Meme cards: minimal bottom strip — badge + button only, hugging bottom edge */
+.card.meme .card-body { padding: 0 22px 28px; display: flex; flex-direction: row; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
 @keyframes riseIn { from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:translateY(0)} }
 
 .badge { display: inline-flex; align-items: center; gap: 6px; font-size: 0.61rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; padding: 4px 12px; border-radius: 50px; margin-bottom: 11px; }
-.card.meme  .badge { background: rgba(255,45,85,0.15);  border: 1px solid rgba(255,45,85,0.38);  color: #ff7090; }
+.card.meme  .badge { background: rgba(255,45,85,0.15);  border: 1px solid rgba(255,45,85,0.38);  color: #ff7090; margin-bottom: 0; }
 .card.ai    .badge { background: rgba(124,58,237,0.15); border: 1px solid rgba(124,58,237,0.38); color: #a78bfa; }
 .card.trend .badge { background: rgba(245,158,11,0.15); border: 1px solid rgba(245,158,11,0.38); color: #fcd34d; }
 .badge-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
@@ -461,47 +490,90 @@ function buildCard(item) {
   const card = document.createElement('div');
   card.className = `card ${item.cat}`;
 
+  // Background layer
   const bg = document.createElement('div'); bg.className = 'card-bg';
   const pat = document.createElement('div'); pat.className = 'card-bg-pat';
-  pat.textContent = item.cat==='meme'?'😂': item.cat==='ai'?'🤖':'🔥';
+  pat.textContent = item.cat==='meme' ? '😂' : item.cat==='ai' ? '🤖' : '🔥';
   bg.appendChild(pat);
+
   if (item.img) {
-    const img = document.createElement('img');
-    img.loading='lazy'; img.decoding='async'; img.src=item.img; img.alt='';
-    img.onload=()=>img.classList.add('loaded'); img.onerror=()=>img.remove();
-    bg.appendChild(img);
+    if (item.cat === 'meme') {
+      // Blurred background fill
+      const blurImg = document.createElement('img');
+      blurImg.className = 'img-blur';
+      blurImg.src = item.img; blurImg.alt = '';
+      blurImg.loading = 'lazy'; blurImg.decoding = 'async';
+      blurImg.onload = () => blurImg.classList.add('loaded');
+      blurImg.onerror = () => blurImg.remove();
+      bg.appendChild(blurImg);
+
+      // Main contained image (full meme visible)
+      const mainImg = document.createElement('img');
+      mainImg.className = 'img-main';
+      mainImg.src = item.img; mainImg.alt = item.title || '';
+      mainImg.loading = 'lazy'; mainImg.decoding = 'async';
+      mainImg.onload = () => mainImg.classList.add('loaded');
+      mainImg.onerror = () => mainImg.remove();
+      bg.appendChild(mainImg);
+    } else {
+      // AI / Trend: cover image
+      const img = document.createElement('img');
+      img.loading = 'lazy'; img.decoding = 'async';
+      img.src = item.img; img.alt = '';
+      img.onload = () => img.classList.add('loaded');
+      img.onerror = () => img.remove();
+      bg.appendChild(img);
+    }
   }
   card.appendChild(bg);
 
-  const vig=document.createElement('div'); vig.className='vignette'; card.appendChild(vig);
-  const blob=document.createElement('div'); blob.className='card-blob'; card.appendChild(blob);
+  const vig  = document.createElement('div'); vig.className  = 'vignette';  card.appendChild(vig);
+  const blob = document.createElement('div'); blob.className = 'card-blob'; card.appendChild(blob);
 
-  const body=document.createElement('div'); body.className='card-body';
+  // Card body
+  const body = document.createElement('div'); body.className = 'card-body';
 
-  // Trend category mini-tag
-  if (item.cat === 'trend' && item.trendCat) {
-    const tag=document.createElement('div'); tag.className='trend-cat-tag';
-    tag.textContent=`${item.trendEmoji} ${item.trendCat}`;
-    body.appendChild(tag);
-  }
+  if (item.cat === 'meme') {
+    // ── MEME: source badge only on left, link button on right ──
+    const badge = document.createElement('div'); badge.className = 'badge';
+    badge.innerHTML = `<span class="badge-dot"></span>${item.srcLabel}`;
+    body.appendChild(badge);
 
-  const badge=document.createElement('div'); badge.className='badge';
-  badge.innerHTML=`<span class="badge-dot"></span>${item.srcLabel}`;
-  body.appendChild(badge);
+    if (item.link) {
+      const a = document.createElement('a'); a.className = 'card-link';
+      a.href = item.link; a.target = '_blank'; a.rel = 'noopener noreferrer';
+      a.textContent = 'View post ↗';
+      body.appendChild(a);
+    }
+  } else {
+    // ── AI / TREND: full text layout ──
+    if (item.cat === 'trend' && item.trendCat) {
+      const tag = document.createElement('div'); tag.className = 'trend-cat-tag';
+      tag.textContent = `${item.trendEmoji} ${item.trendCat}`;
+      body.appendChild(tag);
+    }
 
-  const title=document.createElement('h2'); title.className='card-title'; title.textContent=item.title;
-  body.appendChild(title);
+    const badge = document.createElement('div'); badge.className = 'badge';
+    badge.innerHTML = `<span class="badge-dot"></span>${item.srcLabel}`;
+    body.appendChild(badge);
 
-  if (item.desc) { const d=document.createElement('p'); d.className='card-desc'; d.textContent=item.desc; body.appendChild(d); }
+    const title = document.createElement('h2'); title.className = 'card-title'; title.textContent = item.title;
+    body.appendChild(title);
 
-  const meta=document.createElement('div'); meta.className='card-meta'; meta.textContent=item.meta;
-  body.appendChild(meta);
+    if (item.desc) {
+      const d = document.createElement('p'); d.className = 'card-desc'; d.textContent = item.desc;
+      body.appendChild(d);
+    }
 
-  if (item.link) {
-    const a=document.createElement('a'); a.className='card-link';
-    a.href=item.link; a.target='_blank'; a.rel='noopener noreferrer';
-    a.textContent = item.cat==='meme'?'View post ↗': item.cat==='ai'?'Read story ↗':'See trend ↗';
-    body.appendChild(a);
+    const meta = document.createElement('div'); meta.className = 'card-meta'; meta.textContent = item.meta;
+    body.appendChild(meta);
+
+    if (item.link) {
+      const a = document.createElement('a'); a.className = 'card-link';
+      a.href = item.link; a.target = '_blank'; a.rel = 'noopener noreferrer';
+      a.textContent = item.cat === 'ai' ? 'Read story ↗' : 'See trend ↗';
+      body.appendChild(a);
+    }
   }
 
   card.appendChild(body);
